@@ -127,8 +127,8 @@ for (var pageConfigKey of pageConfigKeys) {
 }
 for (let pageName of pageNames) {
   scriptsSource.push(`./src/pages/${pageName}/js/*.js`);
-  stylesSource.push(`./src/pages/${pageName}/css/*.*`);
-  imgsSource.push(`./src/pages/${pageName}/img/*.*`);
+  stylesSource.push(`./src/pages/${pageName}/css/**`);
+  imgsSource.push(`./src/pages/${pageName}/img/**`);
   allPageFolder.push(`./src/pages/${pageName}`);
 }
 for (let pageName of pageNames) {
@@ -189,7 +189,7 @@ var imgs = function () {
   return gulp.src(imgsSource)
     .pipe(changed("./temp"))
     .pipe(gulp.dest("./temp"))
-    .pipe(gulp.dest(path.resolve(__dirname, "./img")));
+    .pipe(gulp.dest(path.resolve(devFolder, "./img")));
 };
 
 var htmlLinkChange = function (path) {
@@ -230,8 +230,8 @@ var server = function (done) {
     //       will present a certificate warning in the browser.
     // https: true,
     watch: true,
-    files: ["dist/css/*.css", "dist/js/*.js", "dist/*.html"],
-    server: "dist",
+    files: ["dev/css/*.css", "dev/js/*.js", "dev/*.html"],
+    server: "dev",
     reloadDelay: 500,
     port: 3000
   });
@@ -243,7 +243,7 @@ var copyLib = function () {
     .pipe(gulp.dest("./temp"))
     .pipe(gulp.dest(devFolder + "/lib"));
 }
-gulp.task("clean", () => del([devFolder, "temp"]));
+gulp.task("clean", () => del([devFolder, "./temp"]));
 gulp.task(
   "default",
   gulp.series(
@@ -254,7 +254,7 @@ gulp.task(
     //   done()
     // }
     gulp.parallel(copyLib, scripts, styles, htmlTaskList, imgs, watcher),
-    // server
+    server
   )
 );
 //扫描开发环境下面的 html 
